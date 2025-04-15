@@ -66,6 +66,13 @@
       margin-bottom: 2rem;
       color: #333;
     }
+    .generated-sentence {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: green;
+    }
     .watermark {
       position: fixed;
       bottom: 10px;
@@ -96,6 +103,8 @@
     <button onclick="stopFlipping()">暫停</button>
   </div>
 
+  <div class="generated-sentence" id="generatedSentence">我（＿＿）有（＿＿）。</div>
+
   <div class="watermark">@台語call雞精</div>
 
   <audio id="soundEffect" src="https://cdn.pixabay.com/audio/2022/03/15/audio_8cf7068b9e.mp3"></audio>
@@ -104,29 +113,28 @@
 
   <script>
     const flashcards1 = [
-      { text: "早起 tsái-khí", image: "https://cdn.pixabay.com/photo/2022/10/02/14/39/wake-up-7493406_1280.png" },
-      { text: "中晝 tiong-tàu", image: "https://cdn.pixabay.com/photo/2017/08/30/07/52/sun-2695564_1280.jpg" },
-      { text: "下晡 ē-poo", image: "https://cdn.pixabay.com/photo/2018/01/28/14/02/sunset-3110490_1280.jpg" },
-      { text: "暗時 àm-sî", image: "https://cdn.pixabay.com/photo/2015/03/26/09/41/moon-690104_1280.jpg" },
-      { text: "九點 káu-tiám", image: "https://cdn.pixabay.com/photo/2016/11/29/01/13/clock-1866342_1280.jpg" },
-      { text: "十二點 tsa̍p-jī tiám", image: "https://cdn.pixabay.com/photo/2017/01/20/00/30/clock-1995950_1280.jpg" },
-      { text: "四點半 sì tiám puànn", image: "https://cdn.pixabay.com/photo/2020/12/29/21/25/clock-5870651_1280.jpg" },
-      { text: "六點十五 la̍k tiám tsa̍p-gōo", image: "https://cdn.pixabay.com/photo/2019/03/15/15/10/clock-4056306_1280.jpg" }
+      { text: "早起 tsái-khí", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_9IMG-QvohMOk8Y-NFjJjcS_duiPwMIHndQ0LOfQ3UgWYRPHUp9ZY9N_zcfA3suiUTncGu2bI7B6iTytQZseBKCHMsSMhaY80mER0VGKEzk4XFTcC9zSoWlOu9CRbbrfrT6EViyggXkA/s800/hotel_morning_call.png" },
+      { text: "中晝 tiong-tàu", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh95rO-PDdWDclBiauoMyn8_pn5VdCNiBujHVzTegPhE9u8FKK5T8KyFbAsIOUXcubRSqKg4lhGg9zBSVDeubWy0a1j61KuzqJjiPQVn2LgDz_tndZBnbNlPihlRjvQdir-NgL0uB09IH-x/s800/window01_hare.png" },
+      { text: "下晡 ē-poo", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhiZUzRghIH_dTjwupMRPfPS-qpeSgrcnN1pqQlMlIcOLBJ5UEI5DXrRZnjFNcM9vqDLyJpmwzX1FO3K21ER4MFqTUuqqH2X4FwlkB-jHkbeWdtsZf0Gn8X7M9RLfUf9TFpfmu8DgReAhIU/s800/window03_yugata.png" },
+      { text: "暗時 àm-sî", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjnS8W5tptq1b-XUo93wb5nJya9MSyb5SbTMGhdfDRpnw-LMBFLVm0KRD6Va8HhpmscTfM2Ne-PvedAbcbYy7p6Rfjdv-k5LRPCTK0uncfgsbr1t4aO36g6votVILWbJk-1u4RJKolOmtHW/s800/time4_yoru.png" },
+      { text: "九點 káu-tiám", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiUgQd1BWlDeCQZbRReOwaowqtzIoQzE29vS-O46nm9xOzfKnw1E_NtRfoQex89QtX9m6lTgqr4ZUAZMpNR2AstAT4oXYRNNtpMsqmPBRokynjTpeoydJdDa8pXYmLrOGosGta5NItuX6A/s150/clock_0900.png" },
+      { text: "十二點 tsa̍p-jī tiám", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgT-06Valx0YZ6s4FI-n1AhcJIrJkWufz5bm7znCV5j0mZC4iidVeZe74OijfHt9k_7XOzqKZq2MhzJgvCIrcEujbgivXXh7xgvCsSnLO5UVoBsc-JPVo7bI8Xdi6-NBlBZyGSEPtSY1jI/s150/clock_1200.png" },
+      { text: "四點半 sì tiám puànn", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiBpsoFjy8xBavOSlphIL_IJvC24BXLkMZEtNajdo6d1Pb_2VqtgZyFqiv60we4gjEXoK7TarUqsuSzTcn-yMUrkQTeepm5e2inHf9UI7Sm41_91SCOtNd-m6LCtjbOalI5Y5Ne1M1T0kg/s150/clock_0430.png" },
     ];
 
     const flashcards2 = [
-      { text: "食飯", image: "https://cdn.pixabay.com/photo/2017/06/02/18/24/breakfast-2367027_1280.jpg" },
-      { text: "洗喙", image: "https://cdn.pixabay.com/photo/2017/06/20/03/08/toothbrush-2425501_1280.jpg" },
-      { text: "洗身軀", image: "https://cdn.pixabay.com/photo/2016/03/28/09/34/shower-1284539_1280.jpg" },
-      { text: "寫功課", image: "https://cdn.pixabay.com/photo/2015/07/28/22/05/child-865116_1280.jpg" },
-      { text: "上課", image: "https://cdn.pixabay.com/photo/2017/09/26/20/25/school-2791394_1280.jpg" },
-      { text: "唱歌", image: "https://cdn.pixabay.com/photo/2017/03/02/02/41/karaoke-2110751_1280.jpg" },
-      { text: "看電視", image: "https://cdn.pixabay.com/photo/2014/12/27/15/40/television-581812_1280.jpg" },
-      { text: "洗碗", image: "https://cdn.pixabay.com/photo/2016/02/19/11/20/kitchen-1209413_1280.jpg" },
-      { text: "掃塗跤", image: "https://cdn.pixabay.com/photo/2018/03/12/19/21/sweeping-3211563_1280.jpg" },
-      { text: "睏晝", image: "https://cdn.pixabay.com/photo/2015/11/03/09/05/bed-1018928_1280.jpg" },
-      { text: "跳舞", image: "https://cdn.pixabay.com/photo/2016/11/29/09/13/ballet-1869761_1280.jpg" },
-      { text: "家己想啦", image: "https://cdn.pixabay.com/photo/2016/11/29/01/06/idea-1868726_1280.jpg" }
+      { text: "食飯", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhD0Bur-fstOtnXWJfU3S0EVJu-NmZKMrHGV_f-K7mPf8tPmeAqRcjcSfczVbeFBlykkqN9506jUYZa-lBxE-Td2etx3hcjaX53ELkP8tgvyBS8PZrcN4ix_Py7ib0sxFupSth1U_gFiufQ/s800/seikatsu_syukan_woman_bad.png" },
+      { text: "洗喙", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgo3IRmNOP43OLNYOv1u6f67xsHUy59XOhMxtfp_WMF0UpAVU5MD-K3lb3wdsc5M4v3rPmtNf3PBeOad4ITYFu2Lbye-ftwwxNmRhwRHcPxb3xWhk7tvUnnLu4pjATBmmgIbG8IwqnLMAg/s1600/hamigaki_boy.png" },
+      { text: "洗身軀", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjGTPDe0CbudFfsBXV0x4qzcsJG34nUnohwGLrFpfsow707DvwgHYsGCt7Zj8Bsk4Ph6e5a5CKxOSbPjnXmBC2SjBNmUDvPs869-YXuHvDJONKZA3CqGBgkIgFI5fzIYZMldCP7KVUPL1U/s800/shower_man.png" },
+      { text: "寫功課", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEheV3RPBiHbVEqsoCVPGJE_fTRgQYqP4PBiUal9Ux-MHUPm_1rPx1eaEAniBtb70iVp3MG7IFwwsDN0h6tFdN21FgqwLge1AozDIXiUPzBikX3bRsymBs0cmuzPcxs3zQr_aYnw5Rq5fqSy/s800/syukudai_natsuyasumi_boy_aseru.png" },
+      { text: "上課", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgndVfpmw1gWsoI8NTF9797DMfuFtlhUPfrp-M7stfFWPQVN43M4yPqjGZEWkTeSrugpt06SRJQ0ScSNIPTf9tUaZO3xlTPEET43_Xuuj2ESUmoesB65puwAm823c9LSRM75XnjNk8h9Dg/s800/school_class_english.png" },
+      { text: "唱歌", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgWgQCTErcxrvQs5l4uglye9FwaPuT8egak8nv55wTU0D0oDujsoPetqZrUA7brv1rSBtW6TkIQ9fqlsCTaOverkyH-y2sJJiWaOlB_WOaWpda1iy_av1I_MnbJto-pdE9wMPUbzOeeOkIc/s400/gassyou_youchien_boy.png" },
+      { text: "看電視", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEifTNhN-CVx0KLXhyTyuyY_EDQXX684TL-SomelEx5LuTJUpiTPdoxLUta9ifzjFeJL_yHXl36gvJDo6VyzEK3ZTL12_KhH455gY6WqBXldVNipzYQfAac_XiffrbAHq3e8g6ec8n5iqptK/s400/family_tv_soccer2.png" },
+      { text: "洗碗", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjEKkUxRevhQPcJxHy84gL0iDsV779vPG6kCk7kIhRBGk9ULU7uAjFuxfDooVSJy1ZvttQ7AXtXj44rsu-38keBYh2TfrEPLubp3FHAF_s5lXmd9ln6HNHAwHvaAj9DZMQ_lbtGDyiNeGA/s800/sara_arai_man.png" },
+      { text: "掃塗跤", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEig1Ugb86kGHFxPHc5UPjQFr37pIlZypHhxMNwL5iQk8Y9YsTKOuB5pxOSFAhZaHYDEYgNcxvmclr85B7TYuhZhb1brKHt5EHtZcVzatcDXW4NT0uQvjs5gc3Y2A39E9o4_bvzDv08fBWty/s800/syougakkou_souji.png" },
+      { text: "睏晝", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg4njKvzBpHaXEFuE0IMVjoiMB3fbNE437uSh2QSf-6vRl-ahjIecUK1M9BKMsy3fLXmPWQ6_HpYQbayLIoC4aze3r1HLPaRJKraZzrXnrBZic8RdF9E2S2tG1S-ncThzuxjonz1jS_1ow/s400/sleep_nezou_warui.png" },
+      { text: "跳舞", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjegA8VI9CQArdF6rDYpKtxj_vdWBDHcW910CHmhUCwXNdAeTKLuFbQDZW5E0quvooAVxFrmuL8_Ltoef8sDXRie7N8xBLx1P2cUdc9W0InfZDOKvhnVhCKMK-MzjuzaLLiD917Lyq6V7A/s400/dance_hiphop.png" },
+      { text: "家己想啦", image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj3hQ70_N1f_WI4hbPR844XquA8pu1RWLlb9Qg9ApJ9Ukquz1ZKN0pplcnSgQdyi-vvWpqiqwWfzKxxoF9bXBoSFqe2s1t7HYDFTO_3AmzQ6SchM7fXkXgNbP9-zAF4hzQO7Tf2AcC37qly/s1600/face_mark_hemehemekukohi.png" }
     ];
 
     let intervalId = null;
@@ -136,18 +144,21 @@
 
     function showRandomCard() {
       const card1 = flashcards1[Math.floor(Math.random() * flashcards1.length)];
+      const card2 = flashcards2[Math.floor(Math.random() * flashcards2.length)];
+
       document.getElementById("cardText1").textContent = card1.text;
       document.getElementById("cardImage1").src = card1.image;
       document.getElementById("card1").style.animation = 'none';
       void document.getElementById("card1").offsetWidth;
       document.getElementById("card1").style.animation = null;
 
-      const card2 = flashcards2[Math.floor(Math.random() * flashcards2.length)];
       document.getElementById("cardText2").textContent = card2.text;
       document.getElementById("cardImage2").src = card2.image;
       document.getElementById("card2").style.animation = 'none';
       void document.getElementById("card2").offsetWidth;
       document.getElementById("card2").style.animation = null;
+
+      document.getElementById("generatedSentence").textContent = `我（${card1.text}）有（${card2.text}）。`;
 
       sound.currentTime = 0;
       sound.play();
@@ -172,7 +183,6 @@
       bgm.pause();
     }
 
-    // 點擊標題播放音效與提示
     document.getElementById("title").addEventListener("click", () => {
       click.currentTime = 0;
       click.play();
