@@ -3,5 +3,181 @@
 <head>
   <meta charset="UTF-8">
   <title>我咧創啥物？</title>
-  ...
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      background-color: #fff8f0;
+      overflow: hidden;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .flashcard {
+      font-size: 2rem;
+      margin: 1rem auto;
+      padding: 2rem;
+      border: 3px solid #444;
+      border-radius: 16px;
+      width: 300px;
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #fffbea;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      animation: bounce 0.5s ease;
+    }
+    @keyframes bounce {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .flashcard img {
+      max-width: 80%;
+      max-height: 250px;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+    }
+    button {
+      font-size: 1.2rem;
+      margin: 0.5rem;
+      padding: 0.5rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .controls {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .sentence-template {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      color: #333;
+    }
+    .watermark {
+      position: fixed;
+      bottom: 10px;
+      right: 20px;
+      font-size: 1rem;
+      color: #999;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title" style="text-align:center; cursor: pointer;">我咧創啥物？</h1>
+  <div class="sentence-template">我（ <u>時間</u> ）有（ <u>代誌</u> ）。</div>
+
+  <div class="container">
+    <div class="flashcard" id="card1">
+      <img id="cardImage1" src="" alt="圖片">
+      <div id="cardText1">請按下開始</div>
+    </div>
+    <div class="flashcard" id="card2">
+      <img id="cardImage2" src="" alt="圖片">
+      <div id="cardText2">請按下開始</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button onclick="startFlipping()">開始</button>
+    <button onclick="stopFlipping()">暫停</button>
+  </div>
+
+  <div class="watermark">@台語call雞精</div>
+
+  <audio id="soundEffect" src="https://cdn.pixabay.com/audio/2022/03/15/audio_8cf7068b9e.mp3"></audio>
+  <audio id="clickSound" src="https://cdn.pixabay.com/audio/2023/03/09/audio_2f1ecfc0f3.mp3"></audio>
+  <audio id="bgm" src="https://cdn.pixabay.com/audio/2023/03/01/audio_76f9dd82cc.mp3" loop></audio>
+
+  <script>
+    const flashcards1 = [
+      { text: "早起 tsái-khí", image: "https://cdn.pixabay.com/photo/2022/10/02/14/39/wake-up-7493406_1280.png" },
+      { text: "中晝 tiong-tàu", image: "https://cdn.pixabay.com/photo/2017/08/30/07/52/sun-2695564_1280.jpg" },
+      { text: "下晡 ē-poo", image: "https://cdn.pixabay.com/photo/2018/01/28/14/02/sunset-3110490_1280.jpg" },
+      { text: "暗時 àm-sî", image: "https://cdn.pixabay.com/photo/2015/03/26/09/41/moon-690104_1280.jpg" },
+      { text: "九點 káu-tiám", image: "https://cdn.pixabay.com/photo/2016/11/29/01/13/clock-1866342_1280.jpg" },
+      { text: "十二點 tsa̍p-jī tiám", image: "https://cdn.pixabay.com/photo/2017/01/20/00/30/clock-1995950_1280.jpg" },
+      { text: "四點半 sì tiám puànn", image: "https://cdn.pixabay.com/photo/2020/12/29/21/25/clock-5870651_1280.jpg" },
+      { text: "六點十五 la̍k tiám tsa̍p-gōo", image: "https://cdn.pixabay.com/photo/2019/03/15/15/10/clock-4056306_1280.jpg" }
+    ];
+
+    const flashcards2 = [
+      { text: "食飯", image: "https://cdn.pixabay.com/photo/2017/06/02/18/24/breakfast-2367027_1280.jpg" },
+      { text: "洗喙", image: "https://cdn.pixabay.com/photo/2017/06/20/03/08/toothbrush-2425501_1280.jpg" },
+      { text: "洗身軀", image: "https://cdn.pixabay.com/photo/2016/03/28/09/34/shower-1284539_1280.jpg" },
+      { text: "寫功課", image: "https://cdn.pixabay.com/photo/2015/07/28/22/05/child-865116_1280.jpg" },
+      { text: "上課", image: "https://cdn.pixabay.com/photo/2017/09/26/20/25/school-2791394_1280.jpg" },
+      { text: "唱歌", image: "https://cdn.pixabay.com/photo/2017/03/02/02/41/karaoke-2110751_1280.jpg" },
+      { text: "看電視", image: "https://cdn.pixabay.com/photo/2014/12/27/15/40/television-581812_1280.jpg" },
+      { text: "洗碗", image: "https://cdn.pixabay.com/photo/2016/02/19/11/20/kitchen-1209413_1280.jpg" },
+      { text: "掃塗跤", image: "https://cdn.pixabay.com/photo/2018/03/12/19/21/sweeping-3211563_1280.jpg" },
+      { text: "睏晝", image: "https://cdn.pixabay.com/photo/2015/11/03/09/05/bed-1018928_1280.jpg" },
+      { text: "跳舞", image: "https://cdn.pixabay.com/photo/2016/11/29/09/13/ballet-1869761_1280.jpg" },
+      { text: "家己想啦", image: "https://cdn.pixabay.com/photo/2016/11/29/01/06/idea-1868726_1280.jpg" }
+    ];
+
+    let intervalId = null;
+    const sound = document.getElementById("soundEffect");
+    const click = document.getElementById("clickSound");
+    const bgm = document.getElementById("bgm");
+
+    function showRandomCard() {
+      const card1 = flashcards1[Math.floor(Math.random() * flashcards1.length)];
+      document.getElementById("cardText1").textContent = card1.text;
+      document.getElementById("cardImage1").src = card1.image;
+      document.getElementById("card1").style.animation = 'none';
+      void document.getElementById("card1").offsetWidth;
+      document.getElementById("card1").style.animation = null;
+
+      const card2 = flashcards2[Math.floor(Math.random() * flashcards2.length)];
+      document.getElementById("cardText2").textContent = card2.text;
+      document.getElementById("cardImage2").src = card2.image;
+      document.getElementById("card2").style.animation = 'none';
+      void document.getElementById("card2").offsetWidth;
+      document.getElementById("card2").style.animation = null;
+
+      sound.currentTime = 0;
+      sound.play();
+    }
+
+    function startFlipping() {
+      click.currentTime = 0;
+      click.play();
+      if (!intervalId) {
+        showRandomCard();
+        intervalId = setInterval(showRandomCard, 50);
+        bgm.currentTime = 0;
+        bgm.play();
+      }
+    }
+
+    function stopFlipping() {
+      click.currentTime = 0;
+      click.play();
+      clearInterval(intervalId);
+      intervalId = null;
+      bgm.pause();
+    }
+
+    // 點擊標題播放音效與提示
+    document.getElementById("title").addEventListener("click", () => {
+      click.currentTime = 0;
+      click.play();
+      alert("遊戲開始囉！");
+    });
+  </script>
+</body>
 </html>
